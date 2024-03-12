@@ -1,19 +1,46 @@
 #include <iostream>
 using namespace std;
 
-int main(){
+class Point {
+    private:
+        double x;
+        double y;
 
+    public:
+        // 建構子
+        Point() {
+            x = y = 0.0;
+        }
+
+        void setX(double newX) { 
+            x = newX; 
+        }
+        void setY(double newY) { 
+            y = newY; 
+        }
+
+        double getX() { 
+            return x; 
+        }
+        double getY() { 
+            return y; 
+        }
+};
+int main(){
+  
   int num;
   cin>>num;
-  double arr[num][2];
+  Point point[num];
+  //double arr[num][2];
   for(int i=0;i<num;i++){
-    for(int j=0;j<2;j++){
-      cin>>arr[i][j];
-    }
-  }
+    double x,y;
 
-  for(int i=0;i<num;i++){
-      cout<<"("<<arr[i][0]<<", "<<arr[i][1]<<")"<<endl;
-  }
+    cin>>x>>y;
+
+    point[i].setX(x);
+    point[i].setY(y);
+    cout<<"("<<point[i].getX()<<", "<<point[i].getY()<<")"<<endl;
+    }
+    
   return 0;
 }

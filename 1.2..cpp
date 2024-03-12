@@ -26,8 +26,6 @@ class Point {
         double getY() { 
             return y; 
         }
-        ~Point(){}
-        
 };
 
 class Segment {
@@ -64,11 +62,10 @@ int main() {
 
     segment.setPoint1(x1,y1);
     segment.setPoint2(x2,y2);
+
+    cout << segment.distance()<<endl;
     }
 
-    for(int i=0;i<num;i++){
-    cout << segment.distance();
-    }
 
     return 0;
 }
