@@ -1,41 +1,19 @@
-#include <iostream>
-#include <cmath>
-using namespace std;
-
-class Segment {
-private:
-    double x1, y1, x2, y2;
-
+class Path {
 public:
-    // Setter methods for points
-    void setPoint1(double x, double y) {
-        x1 = x;
-        y1 = y;
-    }
-
-    void setPoint2(double x, double y) {
-        x2 = x;
-        y2 = y;
-    }
-
-    // Function to calculate distance between two points
-    static double distance(double x1, double y1, double x2, double y2) {
-        return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    Path(Segment segments[], int num) {
+        double pathLength = 0.0;
+        for (int i = 1; i < num; i++) {
+            if (segments[i - 1].getEnd(1).getX() != segments[i].getEnd(0).getX() ||
+                segments[i - 1].getEnd(1).getY() != segments[i].getEnd(0).getY()) {
+                cout << "-1" << endl;
+                return ;
+            }
+            else{
+                pathLength += segments[0].length();
+                pathLength += segments[i].length();
+                pathLength += segments[num].length();
+                cout << pathLength << endl;
+            }
+        }
     }
 };
-
-int main() {
-    Segment segment;
-
-    double x1, y1, x2, y2;
-    cin >> x1 >> y1 >> x2 >> y2;
-    
-    // Set coordinates for points of the segment
-    segment.setPoint1(x1, y1);
-    segment.setPoint2(x2, y2);
-
-    // Calculate and output the distance between the two points
-    cout << Segment::distance(x1, y1, x2, y2) << endl;
-
-    return 0;
-}
