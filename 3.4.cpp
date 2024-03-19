@@ -1,8 +1,6 @@
 #include <iostream>
 #include <string>
-//#include <algorithm>
-
-using namespace std;
+#include <algorithm>
 
 class ReverseAdd {
 private:
@@ -35,11 +33,11 @@ public:
 
     // Function to find the palindrome using the "reverse and add" method
     void findPalindrome() {
-        while (!isPalindrome(num)) {
+        do {
             int reversed = reverseNumber(num);
             num += reversed;
             iterations++;
-        }
+        }while (!isPalindrome(num));
     }
 
     // Function to get the number of iterations
@@ -55,15 +53,15 @@ public:
 
 int main() {
     int n;
-    cin >> n; // 输入数字个数
+    std::cin >> n; // 输入数字个数
 
     for (int i = 0; i < n; ++i) {
         int num;
-        cin >> num; // 输入数字
+        std::cin >> num; // 输入数字
 
         ReverseAdd ra(num);
         ra.findPalindrome();
-        cout << ra.getIterations() << " " << ra.getResultPalindrome() << endl; // 输出迭代次数和结果回文数
+        std::cout << ra.getIterations() << " " << ra.getResultPalindrome() << std::endl; // 输出迭代次数和结果回文数
     }
 
     return 0;
