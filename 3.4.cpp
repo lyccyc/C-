@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
-#include <algorithm>
+//#include <algorithm>
+
+using namespace std;
 
 class ReverseAdd {
 private:
@@ -19,10 +21,13 @@ private:
 
     // Function to check if a number is a palindrome
     bool isPalindrome(int num) {
-        std::string str_num = std::to_string(num);
-        std::string reversed_str_num = str_num;
-        std::reverse(reversed_str_num.begin(), reversed_str_num.end());
-        return str_num == reversed_str_num;
+        int original = num;
+        int rev = 0;
+        while (num > 0) {
+            rev = rev * 10 + num % 10;
+            num /= 10;
+        }
+        return original == rev;
     }
 
 public:
@@ -50,15 +55,15 @@ public:
 
 int main() {
     int n;
-    std::cin >> n; // 输入数字个数
+    cin >> n; // 输入数字个数
 
     for (int i = 0; i < n; ++i) {
         int num;
-        std::cin >> num; // 输入数字
+        cin >> num; // 输入数字
 
         ReverseAdd ra(num);
         ra.findPalindrome();
-        std::cout << ra.getIterations() << " " << ra.getResultPalindrome() << std::endl; // 输出迭代次数和结果回文数
+        cout << ra.getIterations() << " " << ra.getResultPalindrome() << endl; // 输出迭代次数和结果回文数
     }
 
     return 0;
