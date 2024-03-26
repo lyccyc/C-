@@ -1,141 +1,108 @@
 #include <iostream>
+#include <vector>
 #include <string>
 
 using namespace std;
+
 class Matrix{
 private:
+    vector<vector<int>> matrix;
     int size;
-    int **data;
-    bool initialized;
+
 public:
     Matrix(int n) : size(n) {
-        // Dynamically allocate memory for the matrix
-        data = new int*[size];
-        for (int i = 0; i < size; ++i) {
-            data[i] = new int[size];
-        }
-        /*for(int i = 0;i < size;++i){
-            cout << data[i];
-        }*/
-    }
-
-    ~Matrix() {
-        // Free dynamically allocated memory
-        for (int i = 0; i < size; ++i) {
-            delete[] data[i];
-        }
-        delete[] data;
-    }
-
-    bool isInitialized() const {
-        return initialized;
+        matrix.resize(n, vector<int>(n, 0));
     }
 
     void rotateRight() {
-        int** rotated = new int*[size];
-        for (int i = 0; i < size; i++) {
-            rotated[i] = new int[size];
-            for (int j = 0; j < size; j++) {
-                rotated[j][size - 1 - i] = data[i][j];
+        vector<vector<int>> tempMatrix = matrix;
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                matrix[j][size - 1 - i] = tempMatrix[i][j];
             }
         }
-        // Free the original matrix
-        for (int i = 0; i < size; i++) {
-            delete[] data[i];
-        }
-        delete[] data;
-        data = rotated;
     }
 
     void rotateLeft() {
-        int** rotated = new int*[size];
-        for (int i = 0; i < size; i++) {
-            rotated[i] = new int[size];
-            for (int j = 0; j < size; j++) {
-                rotated[size - 1 - j][i] = data[i][j];
+        vector<vector<int>> tempMatrix = matrix;
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                matrix[size - 1 - j][i] = tempMatrix[i][j];
             }
         }
-        // Free the original matrix
-        for (int i = 0; i < size; i++) {
-            delete[] data[i];
-        }
-        delete[] data;
-        data = rotated;
     }
 
-    void print() const {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                cout << data[i][j] << " ";
+    void print() {
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                cout << matrix[i][j] << " ";
             }
             cout << endl;
         }
     }
 
     void scan() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                cin >> data[i][j];
-                //cout << data[i][j];
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                cin >> matrix[i][j];
             }
         }
-        initialized = true;
-        puts("scan done");
     }
-
-    bool operator==(const Matrix &judge) {
-    if (data == judge.data) return true;
-    return false;
-  }
 };
 
-int main() {
+
+int main(){
+    Matrix matrix(0);
+    bool initialized=false;
     string instruction;
-    Matrix matrix1(0),matrix2(0); 
+    //char instruction[50];
+    while(true){
+        getline(cin,instruction);
+        //cin.getline(instruction,50);
 
-    string right = "rotate right";
-    string left =  "rotate left";
-    while (true) {
-        getline(cin, instruction);
-
-        if (instruction == "scan") {
+        if(instruction == "scan"){
             int size;
             cin >> size;
-            matrix2 = Matrix(size); 
-            matrix2.scan();
-            getchar();
-        } 
-        else if (instruction == "print") {
-            if (matrix2.isInitialized()){
-                matrix2.print();
+            
+            matrix=Matrix(size);
+            matrix.scan();
+            cin.ignore();
+            initialized=true;
+        }
+
+        else if(instruction == "rotate right"){
+            if(initialized == true){
+                matrix.rotateRight();
+            }
+            else{
+                cout << "No element in matrix can be rotated."<< endl;
+            }
+        }
+        
+        else if(instruction == "rotate left"){
+            if(initialized == true){
+                matrix.rotateLeft();
+            }
+            else{
+                cout << "No element in matrix can be rotated."<< endl;
+            }
+        }
+
+        else if(instruction == "print"){
+            if(initialized == true){
+                matrix.print();
             }
             else{
                 cout << "No element in matrix can be printed."<< endl;
             }
-        } 
-        else if (instruction.compare(right) == 0 ) {
-            if(matrix2.isInitialized()){
-                matrix2.rotateRight();
-            }
-            else{
-                cout <<"No element in matrix can be rotated."<< endl;
-            }
         }
-        else if (instruction.compare(left) == 0 ) {
-            if(matrix2.isInitialized()){
-                matrix2.rotateLeft();
-            }
-            else{
-                cout <<"No element in matrix can be rotated."<< endl;
-            }
-        }
-        else if (instruction == "stop") {
+
+        else if(instruction == "stop"){
             break;
-        } 
-        else {
-            cout << "unknown" << endl;
+        }
+
+        else{
+            cout << "unknown"<< endl;
         }
     }
-
-    return 0;
 }
