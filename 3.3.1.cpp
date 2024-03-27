@@ -55,19 +55,28 @@ int main(){
     Matrix matrix(0);
     bool initialized=false;
     string instruction;
+    int size;
     //char instruction[50];
     while(true){
         getline(cin,instruction);
+        //cout << instruction << " ddd " << endl;
         //cin.getline(instruction,50);
 
         if(instruction == "scan"){
-            int size;
             cin >> size;
-            
+            //cout << size << " sss " << endl;
             matrix=Matrix(size);
-            matrix.scan();
-            cin.ignore();
-            initialized=true;
+            
+
+            printf ("after scan:/n");
+            matrix.print();
+
+
+            if(size > 0){
+                matrix.scan();
+                cin.ignore();
+                initialized=true;
+            }
         }
 
         else if(instruction == "rotate right"){
@@ -91,6 +100,7 @@ int main(){
         else if(instruction == "print"){
             if(initialized == true){
                 matrix.print();
+                cout << endl;
             }
             else{
                 cout << "No element in matrix can be printed."<< endl;
@@ -105,4 +115,5 @@ int main(){
             cout << "unknown"<< endl;
         }
     }
+    return 0;
 }
