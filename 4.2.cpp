@@ -78,22 +78,24 @@ public:
         return (numerator == other.numerator) && (denominator == other.denominator);
     }
 
-    friend ostream& operator << (ostream& out, const Fraction &f) {
-    if (f.denominator != 1)
-    	out << "[" << f.numerator << "/" << f.denominator << "]";
-    else
-        out << f.numerator;
-    return out;
-  }
-    
     /*// Display function
     void display() const {
         if (denominator == 1) {
-            std::cout << numerator;
+            cout << numerator;
         } else {
-            std::cout << "(" << numerator << "/" << denominator << ")";
+            cout << "[" << numerator << "/" << denominator << "]";
         }
     }*/
+
+    friend ostream& operator<<(ostream& os, const Fraction& fraction) {
+        if (fraction.denominator == 1 || fraction.numerator == 0) {
+            os << fraction.numerator;
+        } 
+        else {
+            os << "[" << fraction.numerator << "/" << fraction.denominator << "]";
+        }
+        return os;
+    }
 };
 
 int main()
@@ -104,7 +106,4 @@ int main()
   cout << (f1 + f2) << endl;
   cout << (f1 - f2) << endl;
   cout << (f1 == f2) << endl;
-
-  return 0;
 }
-

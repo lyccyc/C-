@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <cstring> // 为了使用 strcmp() 函数
+#include <string>
+
 using namespace std;
 
 class Matrix{
@@ -49,23 +50,34 @@ public:
     }
 };
 
+
 int main(){
     Matrix matrix(0);
     bool initialized=false;
-    char instruction[50];
-
+    string instruction;
+    int size;
+    //char instruction[50];
     while(true){
-        cin.getline(instruction, 50);
-        
-        if(strcmp(instruction, "scan") == 0){
-            int size;
+        getline(cin,instruction);
+        //cout << instruction << " ddd " << endl;
+        //cin.getline(instruction,50);
+
+        if(instruction == "scan"){
             cin >> size;
             matrix=Matrix(size);
-            matrix.scan();
-            initialized=true;
+            if(size > 0){
+                matrix.scan();
+                cin.ignore();
+                initialized=true;
+            }
+            else if(size == 0){
+                initialized=false;
+              	getchar();
+            }
+          	
         }
 
-        else if(strcmp(instruction, "rotate right") == 0){
+        else if(instruction == "rotate right"){
             if(initialized == true){
                 matrix.rotateRight();
             }
@@ -74,7 +86,7 @@ int main(){
             }
         }
         
-        else if(strcmp(instruction, "rotate left") == 0){
+        else if(instruction == "rotate left"){
             if(initialized == true){
                 matrix.rotateLeft();
             }
@@ -83,16 +95,17 @@ int main(){
             }
         }
 
-        else if(strcmp(instruction, "print") == 0){
+        else if(instruction == "print"){
             if(initialized == true){
                 matrix.print();
+                cout << endl;
             }
             else{
                 cout << "No element in matrix can be printed."<< endl;
             }
         }
 
-        else if(strcmp(instruction, "stop") == 0){
+        else if(instruction == "stop"){
             break;
         }
 
