@@ -4,11 +4,30 @@
 using namespace std;
 
 class Fraction {
-private:
-    int numerator;
-    int denominator;
+public:
+    Fraction() : numerator(0), denominator(1) {}
+    Fraction(int n, int m) : numerator(n), denominator(m) {
+        if(m == 0)
+            throw "divided by zero";
+        simplify();
+    }
+    int getNumerator() const {
+        return numerator;
+    }
+    int getDenominator() const {
+        return denominator;
+    }
+    void setNumerator(int n) {
+        numerator = n;
+        simplify();
+    }
+    void setDenominator(int m) {
+        if(m == 0)
+            throw "divided by zero";
+        denominator = m;
+        simplify();
+    }
 
-    // Private function to find the greatest common divisor (GCD) of two numbers
     int findGCD(int a, int b) {
         if (b == 0)
             return a;
@@ -27,38 +46,7 @@ private:
             denominator *= -1;
         }
     }
-
-public:
-    // Default constructor
-    Fraction() : numerator(0), denominator(1) {}
-
-    // Parameterized constructor
-    Fraction(int num, int denom) : numerator(num), denominator(denom) {
-        simplify();
-    }
-
-    // Getter for numerator
-    int getNumerator() const {
-        return numerator;
-    }
-
-    // Getter for denominator
-    int getDenominator() const {
-        return denominator;
-    }
-
-    // Setter for numerator
-    void setNumerator(int num) {
-        numerator = num;
-        simplify();
-    }
-
-    // Setter for denominator
-    void setDenominator(int denom) {
-        denominator = denom;
-        simplify();
-    }
-
+    
     // Overloading + operator
     Fraction operator+(const Fraction& other) const {
         int num = numerator * other.denominator + other.numerator * denominator;
@@ -78,32 +66,25 @@ public:
         return (numerator == other.numerator) && (denominator == other.denominator);
     }
 
-    /*// Display function
-    void display() const {
-        if (denominator == 1) {
-            cout << numerator;
-        } else {
-            cout << "[" << numerator << "/" << denominator << "]";
-        }
-    }*/
-
-    friend ostream& operator<<(ostream& os, const Fraction& fraction) {
-        if (fraction.denominator == 1 || fraction.numerator == 0) {
-            os << fraction.numerator;
-        } 
-        else {
-            os << "[" << fraction.numerator << "/" << fraction.denominator << "]";
-        }
-        return os;
+    friend ostream& operator<<(ostream& out, const Fraction &f) {
+        if (f.denominator == 1 || f.numerator == 0)
+            out << f.numerator;
+        else
+            out << "[" << f.numerator << "/" << f.denominator << "]";
+        return out;
     }
+
+private:
+    int numerator, denominator;
 };
 
-int main()
-{
-  int n1, n2, m1, m2;
-  cin >> n1 >> m1 >> n2 >> m2;
-  Fraction f1(n1, m1), f2(n2, m2);
-  cout << (f1 + f2) << endl;
-  cout << (f1 - f2) << endl;
-  cout << (f1 == f2) << endl;
+int main() {
+    int n1, n2, m1, m2;
+    cin >> n1 >> m1 >> n2 >> m2;
+    Fraction f1(n1, m1), f2(n2, m2);
+    cout << (f1 + f2) << endl;
+    cout << (f1 - f2) << endl;
+    cout << (f1 == f2) << endl;
+
+    return 0;
 }

@@ -1,29 +1,36 @@
 #include <iostream>
+#include <unordered_map>
 #include <algorithm>
-#include <string>
 
 using namespace std;
+class Anagram {
+private:
+    unordered_map<char, int> charCount;
 
-class Anagram : public string {
 public:
-    Anagram(const string& str) : string(str) {}
-
-    string Judge(Anagram &str){
-        string str1=str;
-        str1.erase(remove_if(str1.begin(), str1.end(), isspace), str1.end());
-        transform(str1.begin(), str1.end(), str1.begin(), tolower);
-
-        sort(str1.begin(), str1.end());
-
-        return str;
+    // Constructor
+    Anagram(const string& str) {
+        for (char c : str) {
+            if (isalpha(c)) { // 只計算字母
+                charCount[tolower(c)]++; // 將字母轉為小寫後計數
+            }
+        }
     }
 
-    bool operator==(const Anagram &str) const{
-        string str1 = Judge(str);
-        string str2 = other.str;
-
-        return str1 == str2;
+    // Overloading == operator
+    bool operator==(const Anagram& other) const {
+        return charCount == other.charCount;
     }
-
-
 };
+
+int main() {
+  string buf;
+  getline(cin, buf);
+  Anagram a1(buf);
+  getline(cin, buf);
+  Anagram a2(buf);
+  cout << (a1 == a2) << endl;
+  cout << (a2 == a1) << endl;
+
+  return 0;
+}
