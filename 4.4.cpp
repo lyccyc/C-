@@ -97,7 +97,7 @@ public:
 
     friend ostream& operator<<(ostream& os, const Fraction& fraction) {
         if (fraction.denominator == 1) {
-            os << fraction.numerator;
+            os <<"(" << fraction.numerator <<")";
         } else {
             os << "(" << fraction.numerator << "/" << fraction.denominator << ")";
         }
