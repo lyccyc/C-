@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-
+#include <sstream>
 using namespace std;
 
 class Date {
@@ -10,10 +10,12 @@ private:
     int day;
 
 public:
-    Date() : year(1900), month(1), day(1) {} // Default constructor
+    Date() : year(1900), month(1), day(1) {}
 
     Date(string dateStr) {
-        sscanf(dateStr.c_str(), "%d/%d/%d", &year, &month, &day);
+        stringstream ss(dateStr);
+        char colon;
+        ss >> year >> colon >> month >> colon >> day;
     }
 
     string toString() const {
@@ -21,40 +23,48 @@ public:
     }
 
     int operator-(const Date &other) const {
-        int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        int days = 0;
-        
-        // Calculate days in the full years
-        for (int y = other.year; y < year; ++y) {
-            days += isLeapYear(y) ? 366 : 365;
-        }
-
-        // Add days in the remaining months
-        for (int m = 1; m < month; ++m) {
-            days += daysInMonth[m];
-            if (m == 2 && isLeapYear(year)) // Add an extra day for February if it's a leap year
-                days++;
-        }
-
-        days += day; // Add days of the current month
-        days -= other.day; // Subtract days of other date
-        
-        return days;
+        int thisTotalDay = totalDays();
+        int otherTotalDay = other.totalDays();
+        return abs(thisTotalDay - otherTotalDay);
     }
 
-private:
-    bool isLeapYear(int year) const {
-        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    int countLeapYears(int year) const {
+    int numLeapYear = 0;
+        for (int i = 1900; i <= year; i++) {
+            if ((i % 4 == 0 && i % 100 != 0) || (i % 400 == 0)) {
+                numLeapYear++;
+            }
+        }
+        if (month <= 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))) {
+            numLeapYear--;
+        }
+
+        return numLeapYear;
+}
+
+    int totalDays() const {
+        int days[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int totalDays = day;
+
+        totalDays += (year - 1900) * 365;
+
+        for (int i = 1; i < month; ++i) {
+            totalDays += days[i];
+        }
+
+        totalDays += countLeapYears(year);
+
+        return totalDays;
     }
 };
 
-int main() {
-    Date defaultDate;
-    Date customDate("2024/04/27");
+int main(){
+    Date d1("1990/10/22");
+    Date d2("1994/06/22");
 
-    cout << "Default Date: " << defaultDate.toString() << endl;
-    cout << "Custom Date: " << customDate.toString() << endl;
-    cout << "Difference in days: " << customDate - defaultDate << endl;
+    cout << d1.toString() << endl;
+    cout << d2.toString() << endl;
 
-    return 0;
+    cout << (d1-d2) << endl;
+
 }
