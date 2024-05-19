@@ -1,115 +1,96 @@
 #include <iostream>
-#include <vector>
-#include <stack>
+#include <algorithm> // for std::sort
 
-using namespace std;
-
-class Drawing {
-private:
-    int width;
-    int height;
-    vector<vector<int>> draw;
-    stack<pair<int, int>> stk; // Stack for keeping track of positions
-
+template<class T>
+class Set {
 public:
-    Drawing(int w, int h) : width(w), height(h) {
-        draw.resize(h + 1, vector<int>(w * 2 + 1, 0));
-    }
-
-    void drawLine(int x1, int y1, int x2, int y2) {
-        if (x1 == x2) { // Vertical line
-            for (int y = min(y1, y2); y <= max(y1, y2); ++y) {
-                draw[y][x1 * 2] = 1;
-            }
-        } else { // Horizontal line
-            for (int x = min(x1, x2); x <= max(x1, x2); ++x) {
-                draw[y1][x * 2 + 1] = 2;
-            }
+    Set() : count(0) {} // Default constructor to make the set empty
+    Set(const Set<T>& other) : count(other.count) { // Copy constructor
+        for (int i = 0; i < other.count; ++i) {
+            element[i] = other.element[i];
         }
     }
 
-    void eraseLine(int x1, int y1, int x2, int y2) {
-        if (x1 == x2) { // Vertical line
-            for (int y = min(y1, y2); y <= max(y1, y2); ++y) {
-                draw[y][x1 * 2] = 0;
-            }
-        } else { // Horizontal line
-            for (int x = min(x1, x2); x <= max(x1, x2); ++x) {
-                draw[y1][x * 2 + 1] = 0;
-            }
+    template<class U>
+    int add(const U& val) { // Add element to the set
+        for (int i = 0; i < count; ++i) {
+            if (element[i] == val) // Check if element already exists
+                return 0;
+        }
+        if (count < 100) {
+            element[count++] = val;
+            std::sort(element, element + count); // Sort elements
+            return 1;
+        } else {
+            return -1; // Set is full
         }
     }
 
-    void executeCommands(int startX, int startY, int commands) {
-        stk.push({startX, startY * 2 + 1});
-
-        int count = commands;
-        while (count > 0) {
-            char c;
-            cin >> c;
-            pair<int, int> tmp = stk.top();
-            int x = tmp.first;
-            int y = tmp.second;
-
-            if (c == 'U') {
-                eraseLine(x, y, x + 1, y);
-                stk.push({x + 1, y});
-            } else if (c == 'D') {
-                eraseLine(x, y, x - 1, y);
-                stk.push({x - 1, y});
-            } else if (c == 'L') {
-                eraseLine(x, y, x, y - 2);
-                stk.push({x, y - 2});
-            } else if (c == 'R') {
-                eraseLine(x, y, x, y + 2);
-                stk.push({x, y + 2});
-            } else if (c == 'F') {
-                int num;
-                cin >> num;
-                vector<pair<int, int>> flipList;
-                for (int i = 0; i < num; ++i) {
-                    flipList.push_back(stk.top());
-                    stk.pop();
-                }
-                for (int i = num - 1; i >= 0; --i) {
-                    stk.push(flipList[i]);
-                }
-                count += num;
-            }
-
-            count--;
+    int add(const Set<T>& otherSet) { // Add elements from another set
+        int added = 0;
+        for (int i = 0; i < otherSet.count; ++i) {
+            added += add(otherSet.element[i]);
         }
+        return added;
     }
 
-    void print() const {
-        for (int i = height; i >= 0; --i) {
-            for (int j = 0; j < width * 2 + 1; ++j) {
-                if (i == height && j == width * 2) continue;
-                if (draw[i][j] == 1) cout << "|";
-                else if (draw[i][j] == 2) cout << "_";
-                else cout << " ";
-            }
-            cout << endl;
-        }
+    Set<T> operator+(const Set<T>& otherSet) const { // Union operation
+        Set<T> result(*this);
+        result.add(otherSet);
+        return result;
     }
+
+    Set<T> operator-(const Set<T>& otherSet) const { // Intersection operation
+        Set<T> result;
+        for (int i = 0; i < count; ++i) {
+            if (otherSet.contains(element[i])) {
+                result.add(element[i]);
+            }
+        }
+        return result;
+    }
+
+    bool contains(const T& val) const { // Check if set contains the element
+        for (int i = 0; i < count; ++i) {
+            if (element[i] == val)
+                return true;
+        }
+        return false;
+    }
+
+    void display() const { // Display elements in the set
+        for (int i = 0; i < count; ++i) {
+            std::cout << element[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+private:
+    T element[100];
+    int count;
 };
 
 int main() {
-    int num_test_cases;
-    cin >> num_test_cases;
+    Set<int> set1;
+    set1.add(1);
+    set1.add(2);
+    set1.add(3);
+    set1.add(2); // Adding duplicate element
+    set1.display(); // Output: 1 2 3
 
-    for (int t = 0; t < num_test_cases; ++t) {
-        int m, n;
-        cin >> m >> n;
-        int startX, startY;
-        cin >> startX >> startY;
+    Set<int> set2;
+    set2.add(3);
+    set2.add(4);
+    set2.add(5);
+    set2.display(); // Output: 3 4 5
 
-        Drawing drawing(n, m);
-        drawing.executeCommands(startY - 1, startX - 1, m * n - 1);
+    Set<int> unionSet = set1 + set2; // Union
+    std::cout << "Union: ";
+    unionSet.display(); // Output: 1 2 3 4 5
 
-        drawing.print();
+    Set<int> intersectSet = set1 - set2; // Intersection
+    std::cout << "Intersection: ";
+    intersectSet.display(); // Output: 3
 
-        if (t != num_test_cases - 1) cout << endl;
-    }
     return 0;
 }
