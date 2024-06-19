@@ -56,7 +56,7 @@ class LinkedList
         bool removeFromHead() {
             //陣列為空，返回false
             if (!head)
-            return false;
+                return false;
 
             //指向第一個
             Node *temp = head;

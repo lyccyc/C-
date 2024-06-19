@@ -48,7 +48,7 @@ class Set
   	int count;
 };
 
-int main() {
+/*int main() {
     Set<int> set1;
     set1.add(1);
     set1.add(2);
@@ -66,4 +66,4 @@ int main() {
     set1.display(); // Output: 1 2 3 4 5
 
     return 0;
-}
+}*/
